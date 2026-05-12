@@ -1,12 +1,13 @@
 package com.example.notesapp.data.model
 
+import kotlinx.datetime.Clock
+
 /**
  * Helper multiplatform untuk mendapatkan waktu saat ini dalam milidetik.
  * Menggantikan System.currentTimeMillis() yang hanya tersedia di JVM/Android.
- * Di Kotlin Multiplatform, kita menggunakan kotlin.time.TimeSource atau
- * platform.posix.time (iOS). Solusi paling sederhana: gunakan kotlin.time.Clock.
+ * Menggunakan kotlinx.datetime.Clock yang tersedia di semua platform KMP.
  */
-internal fun currentTimeMs(): Long = kotlinx.datetime.Clock.System.now().toEpochMilliseconds()
+internal fun currentTimeMs(): Long = Clock.System.now().toEpochMilliseconds()
 
 /**
  * Data class yang merepresentasikan satu catatan dalam aplikasi.
