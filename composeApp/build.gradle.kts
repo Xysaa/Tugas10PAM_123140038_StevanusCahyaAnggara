@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
@@ -10,11 +8,11 @@ plugins {
 }
 
 kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
-    }
+    // Gunakan jvmToolchain sebagai pengganti compilerOptions DSL
+    // yang tidak kompatibel dengan AGP 8.7+ di KMP project
+    jvmToolchain(11)
+
+    androidTarget()
 
     listOf(
         iosArm64(),
