@@ -199,12 +199,12 @@ class NotesViewModelTest {
         advanceUntilIdle()
 
         // Tambah catatan melalui ViewModel (bukan langsung ke repo)
-        // agar lifecycle coroutine test dispatcher berjalan dengan benar
-        viewModel.tambahNote("Belajar Android",   "Materi Jetpack Compose",    "Pekerjaan")
+        // Catatan 1 & 3 mengandung "Kotlin" — sehingga hasil pencarian harus 2
+        viewModel.tambahNote("Belajar Kotlin",    "Dasar-dasar Kotlin KMP",    "Umum")
         advanceUntilIdle()
         viewModel.tambahNote("Resep Masak",       "Cara membuat nasi goreng",  "Pribadi")
         advanceUntilIdle()
-        viewModel.tambahNote("Kotlin Coroutines", "Materi Coroutines",         "Umum")
+        viewModel.tambahNote("Kotlin Coroutines", "Materi Flow dan Coroutines", "Pekerjaan")
         advanceUntilIdle()
 
         // Verifikasi data awal sudah masuk (3 catatan)
