@@ -193,21 +193,28 @@ class NotesViewModelTest {
     // ----------------------------------------------------------------
     @Test
     fun `TC-04 cariNote memfilter daftar catatan berdasarkan query`() = runTest(testDispatcher) {
-        // Arrange: siapkan repository dengan data, buat ViewModel baru
+        // Arrange: reset repository dan buat ViewModel baru
         fakeRepository.reset()
-        // Insert langsung ke repository sebelum ViewModel dibuat
-        // agar data sudah ada saat observeNotes() pertama kali berjalan
-        fakeRepository.insertNote(Note(judul = "Belajar Android",   isi = "Materi Jetpack Compose", kategori = "Pekerjaan"))
-        fakeRepository.insertNote(Note(judul = "Resep Masak",       isi = "Cara membuat nasi goreng", kategori = "Pribadi"))
-        fakeRepository.insertNote(Note(judul = "Kotlin Coroutines", isi = "Materi Coroutines",       kategori = "Umum"))
-
         viewModel = NotesViewModel(fakeRepository, validator)
+        advanceUntilIdle()
+
+        // Tambah catatan melalui ViewModel (bukan langsung ke repo)
+        // agar lifecycle coroutine test dispatcher berjalan dengan benar
+        viewModel.tambahNote("Belajar Android",   "Materi Jetpack Compose",    "Pekerjaan")
+        advanceUntilIdle()
+        viewModel.tambahNote("Resep Masak",       "Cara membuat nasi goreng",  "Pribadi")
+        advanceUntilIdle()
+        viewModel.tambahNote("Kotlin Coroutines", "Materi Coroutines",         "Umum")
         advanceUntilIdle()
 
         // Verifikasi data awal sudah masuk (3 catatan)
         val stateAwal = viewModel.uiState.value
         assertIs<NotesUiState.Success>(stateAwal)
-        assertEquals(3, (stateAwal as NotesUiState.Success).notes.size, "Data awal harus 3 catatan")
+        assertEquals(
+            3,
+            (stateAwal as NotesUiState.Success).notes.size,
+            "Data awal harus 3 catatan sebelum pencarian"
+        )
 
         // Act: cari catatan dengan kata kunci "Kotlin"
         viewModel.cariNote("Kotlin")
