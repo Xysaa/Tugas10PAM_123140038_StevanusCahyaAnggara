@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.composeCompiler)
     // Plugin SQLDelight untuk men-generate kode Kotlin dari file .sq
     alias(libs.plugins.sqldelight)
+    // Kover untuk laporan test coverage
+    alias(libs.plugins.kover)
 }
 
 kotlin {
@@ -142,4 +144,31 @@ dependencies {
     // ----------------------------------------------------------------
     androidTestImplementation(libs.compose.ui.test.junit4)
     debugImplementation(libs.compose.ui.test.manifest)
+}
+
+
+// ----------------------------------------------------------------
+// Konfigurasi Kover untuk laporan test coverage
+// ----------------------------------------------------------------
+kover {
+    reports {
+        filters {
+            excludes {
+                // Kecualikan kelas yang di-generate (SQLDelight, BuildConfig, dll)
+                classes(
+                    "*.BuildConfig",
+                    "*.*\$\$serializer",
+                    "com.example.notesapp.data.local.*",  // kelas generated SQLDelight
+                )
+                // Kecualikan file UI (Compose) dari perhitungan coverage
+                packages("com.example.notesapp.ui.*")
+            }
+        }
+        total {
+            html {
+                // Output HTML report ke folder yang mudah ditemukan
+                onCheck = true
+            }
+        }
+    }
 }
