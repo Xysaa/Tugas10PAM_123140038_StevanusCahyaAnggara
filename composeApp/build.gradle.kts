@@ -57,6 +57,8 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             // SQLDelight coroutines extensions untuk Flow support
             implementation(libs.sqldelight.coroutines.extensions)
+            // kotlinx-datetime untuk mendapatkan waktu saat ini secara multiplatform
+            implementation(libs.kotlinx.datetime)
         }
 
         // ----------------------------------------------------------------

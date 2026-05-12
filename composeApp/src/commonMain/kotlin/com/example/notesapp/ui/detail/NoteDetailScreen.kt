@@ -16,6 +16,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -36,6 +37,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.example.notesapp.data.model.Category
 import com.example.notesapp.data.model.Note
+import com.example.notesapp.data.model.currentTimeMs
 import com.example.notesapp.util.TestTags
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -160,7 +162,7 @@ fun NoteDetailScreen(
                     label = { Text("Kategori") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = dropdownExpanded) },
                     modifier = Modifier
-                        .menuAnchor()
+                        .menuAnchor(MenuAnchorType.PrimaryNotEditable)
                         .fillMaxWidth()
                 )
                 ExposedDropdownMenu(
@@ -197,8 +199,8 @@ fun NoteDetailScreen(
                                 judul         = judul,
                                 isi           = isi,
                                 kategori      = kategori,
-                                tanggalDibuat = noteAsli?.tanggalDibuat ?: System.currentTimeMillis(),
-                                tanggalDiubah = System.currentTimeMillis()
+                                tanggalDibuat = noteAsli?.tanggalDibuat ?: currentTimeMs(),
+                                tanggalDiubah = currentTimeMs()
                             )
                         )
                     }

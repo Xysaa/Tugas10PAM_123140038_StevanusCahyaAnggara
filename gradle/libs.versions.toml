@@ -13,6 +13,8 @@ composeMultiplatform = "1.10.3"
 junit = "4.13.2"
 kotlin = "2.3.21"
 material3 = "1.10.0-alpha05"
+# Versi kotlinx-datetime untuk penggantian System.currentTimeMillis() di KMP
+datetime = "0.6.1"
 # Versi Koin untuk Dependency Injection
 koin = "4.0.2"
 # Versi SQLDelight untuk database lokal
@@ -42,6 +44,8 @@ compose-material3 = { module = "org.jetbrains.compose.material3:material3", vers
 compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
 compose-uiToolingPreview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
+# kotlinx-datetime - waktu multiplatform (pengganti System.currentTimeMillis di KMP)
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
 # Koin - Dependency Injection untuk KMP
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
