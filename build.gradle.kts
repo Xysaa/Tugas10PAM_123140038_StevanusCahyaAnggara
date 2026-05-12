@@ -6,4 +6,6 @@ plugins {
     alias(libs.plugins.composeMultiplatform) apply false
     alias(libs.plugins.composeCompiler) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
+    // Kover untuk menghasilkan laporan test coverage
+    alias(libs.plugins.kover) apply false
 }

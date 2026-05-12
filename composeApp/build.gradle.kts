@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
@@ -7,14 +5,16 @@ plugins {
     alias(libs.plugins.composeCompiler)
     // Plugin SQLDelight untuk men-generate kode Kotlin dari file .sq
     alias(libs.plugins.sqldelight)
+    // Kover untuk laporan test coverage
+    alias(libs.plugins.kover)
 }
 
 kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
-    }
+    // Gunakan jvmToolchain sesuai JDK yang terinstall di mesin (JDK 17)
+    // Menggantikan compilerOptions DSL yang tidak kompatibel dengan AGP 8.7+
+    jvmToolchain(17)
+
+    androidTarget()
 
     listOf(
         iosArm64(),
@@ -55,8 +55,12 @@ kotlin {
             implementation(libs.koin.core)
             // Koin Compose integration
             implementation(libs.koin.compose)
+            // Koin Compose ViewModel untuk koinViewModel() di Composable
+            implementation(libs.koin.compose.viewmodel)
             // SQLDelight coroutines extensions untuk Flow support
             implementation(libs.sqldelight.coroutines.extensions)
+            // Catatan: waktu multiplatform ditangani via expect/actual di masing-masing platform
+            // Android: System.currentTimeMillis() | iOS: NSDate.timeIntervalSince1970
         }
 
         // ----------------------------------------------------------------
@@ -118,8 +122,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
@@ -140,4 +144,31 @@ dependencies {
     // ----------------------------------------------------------------
     androidTestImplementation(libs.compose.ui.test.junit4)
     debugImplementation(libs.compose.ui.test.manifest)
+}
+
+
+// ----------------------------------------------------------------
+// Konfigurasi Kover untuk laporan test coverage
+// ----------------------------------------------------------------
+kover {
+    reports {
+        filters {
+            excludes {
+                // Kecualikan kelas yang di-generate (SQLDelight, BuildConfig, dll)
+                classes(
+                    "*.BuildConfig",
+                    "*.*\$\$serializer",
+                    "com.example.notesapp.data.local.*",  // kelas generated SQLDelight
+                )
+                // Kecualikan file UI (Compose) dari perhitungan coverage
+                packages("com.example.notesapp.ui.*")
+            }
+        }
+        total {
+            html {
+                // Output HTML report ke folder yang mudah ditemukan
+                onCheck = true
+            }
+        }
+    }
 }

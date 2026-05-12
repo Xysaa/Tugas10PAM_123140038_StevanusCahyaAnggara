@@ -236,14 +236,12 @@ val viewModelModule = module {
 
 ---
 
-## 📸 Screenshot
+# 📸 Screenshot
 
-> *Jalankan test dengan `./gradlew :composeApp:allTests` dan tambahkan screenshot hasil coverage di sini*
+![HasilCoverage](https://github.com/user-attachments/assets/726fcff3-0016-4eb6-a1c5-db611449d84a)
+![HasilTest](https://github.com/user-attachments/assets/8de4e836-5cf4-42b9-8c6c-d83febb60ff0)
 
 ---
 
 ## 🎥 Video Demo
-
-> *Rekam video 45 detik yang menunjukkan:*
-> 1. *Jalankan semua test dengan Gradle*
-> 2. *Tunjukkan hasil (semua test passing / hijau)*
+[DEMO](https://drive.google.com/file/d/1ctIkyPunEKEEexT2ImhjaGeTieQp4PcJ/view?usp=sharing)

@@ -1,6 +1,14 @@
 package com.example.notesapp.data.model
 
 /**
+ * Helper multiplatform untuk mendapatkan waktu saat ini dalam milidetik.
+ * Implementasi menggunakan expect/actual — didefinisikan per platform.
+ * - Android/JVM: menggunakan System.currentTimeMillis()
+ * - iOS/Native: menggunakan platform.Foundation.NSDate
+ */
+internal expect fun currentTimeMs(): Long
+
+/**
  * Data class yang merepresentasikan satu catatan dalam aplikasi.
  *
  * @param id          Identitas unik catatan (auto-generate dari database)
@@ -15,6 +23,6 @@ data class Note(
     val judul: String,
     val isi: String,
     val kategori: String = "Umum",
-    val tanggalDibuat: Long = System.currentTimeMillis(),
-    val tanggalDiubah: Long = System.currentTimeMillis()
+    val tanggalDibuat: Long = currentTimeMs(),
+    val tanggalDiubah: Long = currentTimeMs()
 )

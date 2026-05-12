@@ -5,6 +5,7 @@ import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOneOrNull
 import com.example.notesapp.data.local.NoteDatabase
 import com.example.notesapp.data.model.Note
+import com.example.notesapp.data.model.currentTimeMs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -94,7 +95,7 @@ class NoteRepositoryImpl(
                 judul          = note.judul,
                 isi            = note.isi,
                 kategori       = note.kategori,
-                tanggal_diubah = System.currentTimeMillis(),
+                tanggal_diubah = currentTimeMs(),
                 id             = note.id
             )
         }

@@ -10,7 +10,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
@@ -56,28 +55,30 @@ class NotesViewModel(
     private fun observeNotes() {
         viewModelScope.launch {
             // Gabungkan query pencarian dan kategori yang dipilih
-            combine(_queryPencarian, _kategoriDipilih) { query, kategori ->
-                Pair(query, kategori)
-            }.flatMapLatest { (query, kategori) ->
-                // Pilih sumber data yang sesuai berdasarkan filter aktif
-                when {
-                    query.isNotBlank() -> repository.searchNotes(query)
-                    kategori != null   -> repository.getNotesByKategori(kategori)
-                    else               -> repository.getAllNotes()
+            try {
+                combine(_queryPencarian, _kategoriDipilih) { query, kategori ->
+                    Pair(query, kategori)
+                }.flatMapLatest { (query, kategori) ->
+                    // Pilih sumber data yang sesuai berdasarkan filter aktif
+                    when {
+                        query.isNotBlank() -> repository.searchNotes(query)
+                        kategori != null   -> repository.getNotesByKategori(kategori)
+                        else               -> repository.getAllNotes()
+                    }
+                }.combine(repository.getAllKategori()) { notes, kategoriList ->
+                    // Gabungkan data catatan dengan daftar kategori
+                    NotesUiState.Success(
+                        notes            = notes,
+                        queryPencarian   = _queryPencarian.value,
+                        kategoriDipilih  = _kategoriDipilih.value,
+                        daftarKategori   = kategoriList
+                    ) as NotesUiState
+                }.collect { state ->
+                    _uiState.value = state
                 }
-            }.combine(repository.getAllKategori()) { notes, kategoriList ->
-                // Gabungkan data catatan dengan daftar kategori
-                NotesUiState.Success(
-                    notes            = notes,
-                    queryPencarian   = _queryPencarian.value,
-                    kategoriDipilih  = _kategoriDipilih.value,
-                    daftarKategori   = kategoriList
-                )
-            }.catch { throwable ->
+            } catch (throwable: Throwable) {
                 // Tangkap error dan tampilkan ke UI
-                emit(NotesUiState.Error(throwable.message ?: "Terjadi kesalahan"))
-            }.collect { state ->
-                _uiState.value = state
+                _uiState.value = NotesUiState.Error(throwable.message ?: "Terjadi kesalahan")
             }
         }
     }

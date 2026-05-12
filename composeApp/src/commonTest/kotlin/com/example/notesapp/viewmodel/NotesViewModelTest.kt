@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -194,13 +193,28 @@ class NotesViewModelTest {
     // ----------------------------------------------------------------
     @Test
     fun `TC-04 cariNote memfilter daftar catatan berdasarkan query`() = runTest(testDispatcher) {
-        // Arrange: isi data awal dengan beberapa catatan
+        // Arrange: reset repository dan buat ViewModel baru
+        fakeRepository.reset()
         viewModel = NotesViewModel(fakeRepository, validator)
         advanceUntilIdle()
-        viewModel.tambahNote("Belajar Android", "Materi Jetpack Compose", "Pekerjaan")
-        viewModel.tambahNote("Resep Masak",     "Cara membuat nasi goreng", "Pribadi")
-        viewModel.tambahNote("Kotlin Coroutines", "Materi Coroutines",     "Umum")
+
+        // Tambah catatan melalui ViewModel (bukan langsung ke repo)
+        // Catatan 1 & 3 mengandung "Kotlin" — sehingga hasil pencarian harus 2
+        viewModel.tambahNote("Belajar Kotlin",    "Dasar-dasar Kotlin KMP",    "Umum")
         advanceUntilIdle()
+        viewModel.tambahNote("Resep Masak",       "Cara membuat nasi goreng",  "Pribadi")
+        advanceUntilIdle()
+        viewModel.tambahNote("Kotlin Coroutines", "Materi Flow dan Coroutines", "Pekerjaan")
+        advanceUntilIdle()
+
+        // Verifikasi data awal sudah masuk (3 catatan)
+        val stateAwal = viewModel.uiState.value
+        assertIs<NotesUiState.Success>(stateAwal)
+        assertEquals(
+            3,
+            (stateAwal as NotesUiState.Success).notes.size,
+            "Data awal harus 3 catatan sebelum pencarian"
+        )
 
         // Act: cari catatan dengan kata kunci "Kotlin"
         viewModel.cariNote("Kotlin")
@@ -212,6 +226,10 @@ class NotesViewModelTest {
         val hasilCari = (state as NotesUiState.Success).notes
         assertEquals(2, hasilCari.size, "Harus ada 2 catatan mengandung 'Kotlin'")
         assertEquals("Kotlin", state.queryPencarian, "Query pencarian harus tersimpan di state")
+        assertTrue(
+            hasilCari.all { it.judul.contains("Kotlin", true) || it.isi.contains("Kotlin", true) },
+            "Semua hasil harus mengandung kata kunci 'Kotlin'"
+        )
     }
 
     // ----------------------------------------------------------------
