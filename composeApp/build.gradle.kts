@@ -53,6 +53,8 @@ kotlin {
             implementation(libs.koin.core)
             // Koin Compose integration
             implementation(libs.koin.compose)
+            // Koin Compose ViewModel untuk koinViewModel() di Composable
+            implementation(libs.koin.compose.viewmodel)
             // SQLDelight coroutines extensions untuk Flow support
             implementation(libs.sqldelight.coroutines.extensions)
         }
