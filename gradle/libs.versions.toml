@@ -13,6 +13,16 @@ composeMultiplatform = "1.10.3"
 junit = "4.13.2"
 kotlin = "2.3.21"
 material3 = "1.10.0-alpha05"
+# Versi Koin untuk Dependency Injection
+koin = "4.0.2"
+# Versi SQLDelight untuk database lokal
+sqldelight = "2.0.2"
+# Versi MockK untuk mocking di unit test Android
+mockk = "1.14.0"
+# Versi Turbine untuk testing Flow
+turbine = "1.2.1"
+# Versi coroutines untuk testing
+coroutines = "1.10.2"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -32,6 +42,26 @@ compose-material3 = { module = "org.jetbrains.compose.material3:material3", vers
 compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
 compose-uiToolingPreview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
+# Koin - Dependency Injection untuk KMP
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
+# SQLDelight - Database lokal KMP
+sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelight-native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
+sqldelight-coroutines-extensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
+# MockK - Mocking library khusus JVM/Android
+mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
+mockk-agent = { module = "io.mockk:mockk-agent", version.ref = "mockk" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+# Turbine - Testing library untuk Flow
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+# Coroutines test
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+# Compose UI Test untuk instrumentasi Android
+compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -39,3 +69,5 @@ androidLibrary = { id = "com.android.library", version.ref = "agp" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+# SQLDelight Gradle plugin untuk generate kode dari file .sq
+sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }

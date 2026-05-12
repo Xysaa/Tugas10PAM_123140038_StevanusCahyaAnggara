@@ -1,0 +1,56 @@
+-- Tabel utama untuk menyimpan data catatan
+CREATE TABLE NoteEntity (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    judul           TEXT    NOT NULL,
+    isi             TEXT    NOT NULL,
+    kategori        TEXT    NOT NULL DEFAULT 'Umum',
+    tanggal_dibuat  INTEGER NOT NULL,
+    tanggal_diubah  INTEGER NOT NULL
+);
+
+-- Ambil semua catatan, diurutkan dari yang paling baru diubah
+getAllNotes:
+SELECT * FROM NoteEntity ORDER BY tanggal_diubah DESC;
+
+-- Ambil satu catatan berdasarkan id
+getNoteById:
+SELECT * FROM NoteEntity WHERE id = :id;
+
+-- Cari catatan berdasarkan kata kunci pada judul atau isi (case-insensitive)
+searchNotes:
+SELECT * FROM NoteEntity
+WHERE judul LIKE '%' || :query || '%'
+   OR isi   LIKE '%' || :query || '%'
+ORDER BY tanggal_diubah DESC;
+
+-- Filter catatan berdasarkan kategori tertentu
+getNotesByKategori:
+SELECT * FROM NoteEntity
+WHERE kategori = :kategori
+ORDER BY tanggal_diubah DESC;
+
+-- Ambil semua nama kategori yang unik (untuk chip filter)
+getAllKategori:
+SELECT DISTINCT kategori FROM NoteEntity ORDER BY kategori ASC;
+
+-- Masukkan catatan baru ke dalam tabel
+insertNote:
+INSERT INTO NoteEntity(judul, isi, kategori, tanggal_dibuat, tanggal_diubah)
+VALUES (?, ?, ?, ?, ?);
+
+-- Perbarui data catatan berdasarkan id
+updateNote:
+UPDATE NoteEntity
+SET judul          = ?,
+    isi            = ?,
+    kategori       = ?,
+    tanggal_diubah = ?
+WHERE id = ?;
+
+-- Hapus catatan berdasarkan id
+deleteNote:
+DELETE FROM NoteEntity WHERE id = ?;
+
+-- Ambil rowid terakhir yang diinsert (digunakan setelah insertNote)
+lastInsertRowId:
+SELECT last_insert_rowid();
