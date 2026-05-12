@@ -8,9 +8,9 @@ plugins {
 }
 
 kotlin {
-    // Gunakan jvmToolchain sebagai pengganti compilerOptions DSL
-    // yang tidak kompatibel dengan AGP 8.7+ di KMP project
-    jvmToolchain(11)
+    // Gunakan jvmToolchain sesuai JDK yang terinstall di mesin (JDK 17)
+    // Menggantikan compilerOptions DSL yang tidak kompatibel dengan AGP 8.7+
+    jvmToolchain(17)
 
     androidTarget()
 
@@ -116,8 +116,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
